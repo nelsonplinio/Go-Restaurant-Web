@@ -102,6 +102,26 @@ const Dashboard: React.FC = () => {
     [toggleEditModal],
   );
 
+  const handleUpdateFoodAvailable = useCallback(async (food: IFoodPlate) => {
+    try {
+      await api.put(`foods/${food.id}`, food);
+
+      setFoods(currentState =>
+        currentState.map(foodSaved => {
+          if (food.id === foodSaved.id) {
+            return {
+              ...foodSaved,
+              ...food,
+            };
+          }
+          return foodSaved;
+        }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   return (
     <>
       <Header openModal={toggleModal} />
@@ -125,6 +145,7 @@ const Dashboard: React.FC = () => {
               food={food}
               handleDelete={handleDeleteFood}
               handleEditFood={handleEditFood}
+              handleUpdateFoodAvailable={handleUpdateFoodAvailable}
             />
           ))}
       </FoodsContainer>
